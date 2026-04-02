@@ -35,30 +35,32 @@ dependencies {
 }
 
 configure<BukkitPluginDescription> {
-    main = "@group@.Main"
+    main = "com.github.ringoame196_s_mcPlugin.Main"
     version = fullVersion
     apiVersion = "1." + mcVersion.split(".")[1]
-    author = "@author@"
-    website = "@website@"
-    /*
-    コマンド追加用
+    author = "ringoame196_s_mcPlugin"
+    website = "https://github.com/ringoame196-s-mcPlugin/LockChest"
+
     commands {
-        register("test") {
-            description = "This is a test command!"
-            aliases = listOf("t")
-            permission = "testplugin.test"
-            usage = "Just run the command!"
+        register("lock") {
+            description = "LockChest Command to lock"
+            usage = "/lock"
         }
+        register("unlock") {
+            description = "LockChest Command to unlock"
+            usage = "/lock"
+        }
+
+
     }
-    */
 }
 
 tasks.withType<ShadowJar> {
     configurations = listOf(shadowImplementation)
     archiveClassifier.set("")
-    relocate("kotlin", "@group@.libs.kotlin")
-    relocate("org.intellij.lang.annotations", "@group@.libs.org.intellij.lang.annotations")
-    relocate("org.jetbrains.annotations", "@group@.libs.org.jetbrains.annotations")
+    relocate("kotlin", "com.github.ringoame196_s_mcPlugin.libs.kotlin")
+    relocate("org.intellij.lang.annotations", "com.github.ringoame196_s_mcPlugin.libs.org.intellij.lang.annotations")
+    relocate("org.jetbrains.annotations", "com.github.ringoame196_s_mcPlugin.libs.org.jetbrains.annotations")
 }
 
 tasks.named("build") {
