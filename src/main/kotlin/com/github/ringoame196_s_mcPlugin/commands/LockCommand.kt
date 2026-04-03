@@ -1,6 +1,5 @@
 package com.github.ringoame196_s_mcPlugin.commands
 
-import com.github.ringoame196_s_mcPlugin.InputAnvilInventoryManager
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -14,9 +13,6 @@ class LockCommand : CommandExecutor, TabCompleter {
             sender.sendMessage(message)
             return true
         }
-
-        val inventory = InputAnvilInventoryManager.makeInventory()
-        sender.openInventory(inventory)
 
         return true
     }
