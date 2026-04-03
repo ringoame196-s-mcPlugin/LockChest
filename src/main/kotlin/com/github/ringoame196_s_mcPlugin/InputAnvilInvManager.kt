@@ -1,5 +1,6 @@
 package com.github.ringoame196_s_mcPlugin
 
+import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
 import org.bukkit.inventory.AnvilInventory
@@ -7,12 +8,13 @@ import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 
 object InputAnvilInvManager {
-    private val inputAnvilInventoryList = mutableListOf<Inventory>()
+    private val inputAnvilInventorys = mutableMapOf<Inventory, InputData>()
 
-    fun openInv(player: Player) {
+    fun openInv(player: Player, type: InputType, blockLocation: Location) {
         player.openAnvil(null, true)
         val inv = player.openInventory.topInventory
-        inputAnvilInventoryList.add(inv)
+        val data = InputData(blockLocation, type)
+        inputAnvilInventorys[inv] = data
         val paper = makeInputPaper()
         inv.setItem(0, paper)
     }
@@ -27,11 +29,11 @@ object InputAnvilInvManager {
     }
 
     fun isInputAnvilInv(inv: Inventory): Boolean {
-        return inputAnvilInventoryList.contains(inv)
+        return inputAnvilInventorys.keys.contains(inv)
     }
 
     fun deleteList(inv: Inventory) {
-        inputAnvilInventoryList.remove(inv)
+        inputAnvilInventorys.remove(inv)
     }
 
     fun getText(inv: Inventory): String? {
