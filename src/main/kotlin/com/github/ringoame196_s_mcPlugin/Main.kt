@@ -7,12 +7,28 @@ import org.bukkit.plugin.java.JavaPlugin
 
 class Main : JavaPlugin() {
     private val plugin = this
+    lateinit var db: DataBaseManager
+
     override fun onEnable() {
         super.onEnable()
+
+        // DB
+        db = DataBaseManager(this, "data.db")
+        db.init()
+        PasswordManager.init(db)
+
+        // Events
         server.pluginManager.registerEvents(Events(), plugin)
+
+        // Command
         val lockCommand = getCommand("lock")
         lockCommand!!.setExecutor(LockCommand())
         val unLockCommand = getCommand("unlock")
         unLockCommand!!.setExecutor(UnLockCommand())
+    }
+
+    override fun onDisable() {
+        super.onDisable()
+        db.close()
     }
 }

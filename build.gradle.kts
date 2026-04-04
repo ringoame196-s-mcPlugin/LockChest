@@ -36,6 +36,9 @@ dependencies {
     shadowImplementation(kotlin("stdlib"))
     // compileOnly("org.spigotmc:spigot-api:$mcVersion-R0.1-SNAPSHOT")
     compileOnly("io.papermc.paper:paper-api:$mcVersion-R0.1-SNAPSHOT")
+    // sqlite
+    val sqliteVersion = "3.46.1.0"
+    implementation("org.xerial:sqlite-jdbc:$sqliteVersion")
 }
 
 configure<BukkitPluginDescription> {
