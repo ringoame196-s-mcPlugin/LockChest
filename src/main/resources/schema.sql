@@ -1,4 +1,4 @@
-CREATE TABLE "locks" (
+CREATE TABLE IF NOT EXISTS "locks" (
     "world_name" TEXT NOT NULL,
     "x" INTEGER NOT NULL,
     "y" INTEGER NOT NULL,

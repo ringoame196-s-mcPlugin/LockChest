@@ -57,8 +57,10 @@ configure<BukkitPluginDescription> {
             description = "LockChest Command to unlock"
             usage = "/lock"
         }
-
-
+        register("open") {
+            description = "LockChest Command to open"
+            usage = "/open"
+        }
     }
 }
 

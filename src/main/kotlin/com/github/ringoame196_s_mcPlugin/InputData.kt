@@ -1,8 +1,10 @@
 package com.github.ringoame196_s_mcPlugin
 
-import org.bukkit.Location
+import org.bukkit.block.Block
+import java.util.UUID
 
 data class InputData(
-    val location: Location,
-    val type: InputType
+    val lockBlock: Block,
+    val type: InputType,
+    val owner: UUID,
 )

@@ -14,7 +14,7 @@ object PasswordManager {
         lockData[lockLocation] = data
     }
 
-    fun remove(lockLocation: LockLocation) {
+    fun removeLockData(lockLocation: LockLocation) {
         lockData.remove(lockLocation)
     }
 
