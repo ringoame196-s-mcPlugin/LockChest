@@ -39,6 +39,6 @@ object CommonCommand {
     }
 
     fun openInput(player: Player, type: InputType, block: Block) {
-        InputAnvilInvManager.openInv(player, type, block.location)
+        InputAnvilInvManager.openInv(player, type, block)
     }
 }
