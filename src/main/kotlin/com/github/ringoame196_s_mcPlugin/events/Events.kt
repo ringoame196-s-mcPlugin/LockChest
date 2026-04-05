@@ -1,12 +1,15 @@
 package com.github.ringoame196_s_mcPlugin.events
 
 import com.github.ringoame196_s_mcPlugin.InputAnvilInvManager
+import com.github.ringoame196_s_mcPlugin.InputData
 import com.github.ringoame196_s_mcPlugin.InputType
 import com.github.ringoame196_s_mcPlugin.LockBlockManager
 import com.github.ringoame196_s_mcPlugin.LockData
+import com.github.ringoame196_s_mcPlugin.LockLocation
 import com.github.ringoame196_s_mcPlugin.PasswordManager
 import com.github.ringoame196_s_mcPlugin.toLockLocation
 import org.bukkit.ChatColor
+import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -34,16 +37,44 @@ class Events : Listener {
 
         val pass = InputAnvilInvManager.getText(inv) ?: return
         player.closeInventory()
-        player.sendMessage(pass)
         InputAnvilInvManager.deleteList(inv)
         val lockData = LockData(pass, player.uniqueId)
         val lockLocation = inputData.lockBlock.location.toLockLocation()
 
         when (inputData.type) {
-            InputType.LOCK -> PasswordManager.addLockData(lockLocation, lockData)
-            InputType.UNLOCK -> PasswordManager.removeLockData(lockLocation)
-            InputType.OPEN -> LockBlockManager.openInventory(player, inputData.lockBlock)
+            InputType.LOCK -> lock(lockLocation, lockData, player)
+            InputType.OPEN -> open(player, inputData, lockData)
         }
+    }
+
+    private fun lock(lockLocation: LockLocation, lockData: LockData, player: Player) {
+        if (PasswordManager.exists(lockLocation)) {
+            val message = "${ChatColor.RED}既にロックがかかっています"
+            player.sendMessage(message)
+            return
+        }
+
+        val message = "${ChatColor.YELLOW}ロックをかけました"
+        val sound = Sound.BLOCK_CHEST_LOCKED
+        player.sendMessage(message)
+        player.playSound(player, sound, 1f, 1f)
+        PasswordManager.addLockData(lockLocation, lockData)
+    }
+
+    private fun open(player: Player, inputData: InputData, lockData: LockData) {
+        val lockBlock = inputData.lockBlock
+        val passWord = lockData.passWord
+
+        if (PasswordManager.authenticatePassword(inputData.lockBlock.location.toLockLocation(), passWord)) {
+            LockBlockManager.openInventory(player, lockBlock)
+        } else {
+            sendFailure(player)
+        }
+    }
+
+    private fun sendFailure(player: Player) {
+        val message = "${ChatColor.RED}パスワードが間違っています"
+        player.sendMessage(message)
     }
 
     @EventHandler
@@ -53,6 +84,7 @@ class Events : Listener {
         if (!PasswordManager.exists(block.location.toLockLocation())) {
             return
         }
+        e.isCancelled = true
         InputAnvilInvManager.openInv(player, InputType.OPEN, block)
     }
 
