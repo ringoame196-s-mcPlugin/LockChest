@@ -60,6 +60,14 @@ configure<BukkitPluginDescription> {
         register("open") {
             description = "LockChest Command to open"
             usage = "/open"
+            permission = "lockchest.admin"
+        }
+    }
+
+    permissions {
+        register("lockchest.admin") {
+            description = "管理者権限"
+            default = BukkitPluginDescription.Permission.Default.OP
         }
     }
 }
