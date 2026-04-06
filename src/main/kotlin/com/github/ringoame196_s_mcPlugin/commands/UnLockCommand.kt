@@ -1,6 +1,7 @@
 package com.github.ringoame196_s_mcPlugin.commands
 
 import com.github.ringoame196_s_mcPlugin.PasswordManager
+import com.github.ringoame196_s_mcPlugin.PermissionManager
 import com.github.ringoame196_s_mcPlugin.toLockLocation
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
@@ -21,7 +22,7 @@ class UnLockCommand : CommandExecutor, TabCompleter {
             return true
         }
 
-        if (PasswordManager.authenticateOwner(lockLocation, player.uniqueId)) {
+        if (PasswordManager.authenticateOwner(lockLocation, player.uniqueId) || PermissionManager.isAdmin(player)) {
             PasswordManager.removeLockData(lockLocation)
             val message = "${ChatColor.YELLOW}ロックを解除しました"
             player.sendMessage(message)
