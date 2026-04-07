@@ -1,5 +1,6 @@
 package com.github.ringoame196_s_mcPlugin.events
 
+import com.github.ringoame196_s_mcPlugin.HashManager
 import com.github.ringoame196_s_mcPlugin.InputAnvilInvManager
 import com.github.ringoame196_s_mcPlugin.InputData
 import com.github.ringoame196_s_mcPlugin.InputType
@@ -8,6 +9,7 @@ import com.github.ringoame196_s_mcPlugin.LockData
 import com.github.ringoame196_s_mcPlugin.LockLocation
 import com.github.ringoame196_s_mcPlugin.PasswordManager
 import com.github.ringoame196_s_mcPlugin.toLockLocation
+import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Sound
 import org.bukkit.entity.Player
@@ -18,8 +20,9 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.Inventory
+import org.bukkit.plugin.Plugin
 
-class Events : Listener {
+class Events(private val plugin: Plugin) : Listener {
     @EventHandler
     fun onInventoryClick(e: InventoryClickEvent) {
         val inv = e.inventory
@@ -35,41 +38,67 @@ class Events : Listener {
             return
         }
 
-        val pass = InputAnvilInvManager.getText(inv) ?: return
         player.closeInventory()
         InputAnvilInvManager.deleteList(inv)
-        val lockData = LockData(pass, player.uniqueId)
         val lockLocation = inputData.lockBlock.location.toLockLocation()
 
+        val inputPassWord = InputAnvilInvManager.getText(inv) ?: return
+
         when (inputData.type) {
-            InputType.LOCK -> lock(lockLocation, lockData, player)
-            InputType.OPEN -> open(player, inputData, lockData)
+            InputType.LOCK -> lock(lockLocation, inputPassWord, player)
+            InputType.OPEN -> open(player, inputData, inputPassWord)
         }
     }
 
-    private fun lock(lockLocation: LockLocation, lockData: LockData, player: Player) {
+    private fun lock(lockLocation: LockLocation, inputPassWord: String, player: Player) {
         if (PasswordManager.exists(lockLocation)) {
             val message = "${ChatColor.RED}既にロックがかかっています"
             player.sendMessage(message)
             return
         }
 
-        val message = "${ChatColor.YELLOW}ロックをかけました"
-        val sound = Sound.BLOCK_CHEST_LOCKED
-        player.sendMessage(message)
-        player.playSound(player, sound, 1f, 1f)
-        PasswordManager.addLockData(lockLocation, lockData)
+        Bukkit.getScheduler().runTaskAsynchronously(
+            plugin,
+            Runnable {
+                val hashPassWord = HashManager.hash(inputPassWord)
+
+                Bukkit.getScheduler().runTask(
+                    plugin,
+                    Runnable {
+                        val lockData = LockData(hashPassWord, player.uniqueId)
+                        PasswordManager.addLockData(lockLocation, lockData)
+
+                        val message = "${ChatColor.YELLOW}ロックをかけました"
+                        val sound = Sound.BLOCK_CHEST_LOCKED
+                        player.sendMessage(message)
+                        player.playSound(player, sound, 1f, 1f)
+                    }
+                )
+            }
+        )
     }
 
-    private fun open(player: Player, inputData: InputData, lockData: LockData) {
+    private fun open(player: Player, inputData: InputData, inputPassword: String) {
         val lockBlock = inputData.lockBlock
-        val passWord = lockData.passWord
+        val lockLocation = lockBlock.location.toLockLocation()
 
-        if (PasswordManager.authenticatePassword(inputData.lockBlock.location.toLockLocation(), passWord)) {
-            LockBlockManager.openInventory(player, lockBlock)
-        } else {
-            sendFailure(player)
-        }
+        Bukkit.getScheduler().runTaskAsynchronously(
+            plugin,
+            Runnable {
+                val ok = PasswordManager.authenticatePassWord(lockLocation, inputPassword)
+
+                Bukkit.getScheduler().runTask(
+                    plugin,
+                    Runnable {
+                        if (ok) {
+                            LockBlockManager.openInventory(player, lockBlock)
+                        } else {
+                            sendFailure(player)
+                        }
+                    }
+                )
+            }
+        )
     }
 
     private fun sendFailure(player: Player) {

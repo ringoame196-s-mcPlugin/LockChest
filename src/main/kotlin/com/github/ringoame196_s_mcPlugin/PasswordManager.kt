@@ -22,13 +22,14 @@ object PasswordManager {
         return lockData.containsKey(lockLocation)
     }
 
-    fun authenticatePassword(lockLocation: LockLocation, inputPassword: String): Boolean {
-        val data = lockData[lockLocation] ?: return false
-        return data.passWord == inputPassword
-    }
-
     fun authenticateOwner(lockLocation: LockLocation, owner: UUID): Boolean {
         val data = lockData[lockLocation] ?: return false
         return data.owner == owner
+    }
+
+    fun authenticatePassWord(lockLocation: LockLocation, inputPassword: String): Boolean {
+        val data = lockData[lockLocation] ?: return false
+        val savedHash = data.passWord
+        return HashManager.verify(inputPassword, savedHash)
     }
 }
