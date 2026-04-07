@@ -39,6 +39,8 @@ dependencies {
     // sqlite
     val sqliteVersion = "3.46.1.0"
     implementation("org.xerial:sqlite-jdbc:$sqliteVersion")
+
+    shadowImplementation("org.mindrot:jbcrypt:0.4")
 }
 
 configure<BukkitPluginDescription> {

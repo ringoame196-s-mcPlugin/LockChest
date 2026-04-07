@@ -19,7 +19,7 @@ class Main : JavaPlugin() {
         PasswordManager.init(db)
 
         // Events
-        server.pluginManager.registerEvents(Events(), plugin)
+        server.pluginManager.registerEvents(Events(plugin), plugin)
 
         // Command
         val lockCommand = getCommand("lock")
