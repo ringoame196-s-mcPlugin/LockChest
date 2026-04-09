@@ -1,8 +1,8 @@
 package com.github.ringoame196_s_mcPlugin.commands
 
+import com.github.ringoame196_s_mcPlugin.LockBlockManager
 import com.github.ringoame196_s_mcPlugin.PasswordManager
 import com.github.ringoame196_s_mcPlugin.PermissionManager
-import com.github.ringoame196_s_mcPlugin.toLockLocation
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -13,8 +13,7 @@ class UnLockCommand : CommandExecutor, TabCompleter {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         val player = CommonCommand.getPlayer(sender) ?: return true
         val block = CommonCommand.getTargetLockBlock(player) ?: return true
-        val location = block.location
-        val lockLocation = location.toLockLocation()
+        val lockLocation = LockBlockManager.getLockLocation(block) ?: return true
 
         if (!PasswordManager.exists(lockLocation)) {
             val message = "${ChatColor.RED}ロックがかかっていません"

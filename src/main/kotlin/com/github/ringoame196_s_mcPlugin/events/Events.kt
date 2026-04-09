@@ -8,10 +8,10 @@ import com.github.ringoame196_s_mcPlugin.LockBlockManager
 import com.github.ringoame196_s_mcPlugin.LockData
 import com.github.ringoame196_s_mcPlugin.LockLocation
 import com.github.ringoame196_s_mcPlugin.PasswordManager
-import com.github.ringoame196_s_mcPlugin.toLockLocation
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Sound
+import org.bukkit.block.DoubleChest
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -25,6 +25,7 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.BlockInventoryHolder
 import org.bukkit.inventory.Inventory
+import org.bukkit.inventory.InventoryHolder
 import org.bukkit.plugin.Plugin
 
 class Events(private val plugin: Plugin) : Listener {
@@ -45,7 +46,7 @@ class Events(private val plugin: Plugin) : Listener {
 
         player.closeInventory()
         InputAnvilInvManager.deleteList(inv)
-        val lockLocation = inputData.lockBlock.location.toLockLocation()
+        val lockLocation = LockBlockManager.getLockLocation(inputData.lockBlock) ?: return
 
         val inputPassWord = InputAnvilInvManager.getText(inv) ?: return
 
@@ -85,7 +86,7 @@ class Events(private val plugin: Plugin) : Listener {
 
     private fun open(player: Player, inputData: InputData, inputPassword: String) {
         val lockBlock = inputData.lockBlock
-        val lockLocation = lockBlock.location.toLockLocation()
+        val lockLocation = LockBlockManager.getLockLocation(lockBlock) ?: return
 
         Bukkit.getScheduler().runTaskAsynchronously(
             plugin,
@@ -119,7 +120,8 @@ class Events(private val plugin: Plugin) : Listener {
 
         if (action != Action.RIGHT_CLICK_BLOCK) return
 
-        if (!PasswordManager.exists(block.location.toLockLocation())) {
+        val lockLocation = LockBlockManager.getLockLocation(block) ?: return
+        if (!PasswordManager.exists(lockLocation)) {
             return
         }
         e.isCancelled = true
@@ -141,7 +143,8 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val message = "${ChatColor.RED}This block is locked"
 
-        if (PasswordManager.exists(block.location.toLockLocation())) {
+        val lockLocation = LockBlockManager.getLockLocation(block) ?: return
+        if (PasswordManager.exists(lockLocation)) {
             e.isCancelled = true
             player.sendMessage(message)
         }
@@ -150,28 +153,40 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler(ignoreCancelled = true)
     fun onExplode(e: EntityExplodeEvent) {
         e.blockList().removeIf { block ->
-            PasswordManager.exists(block.location.toLockLocation())
+            LockBlockManager.getLockLocation(block)?.let { PasswordManager.exists(it) } == true
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     fun onBlockExplode(e: BlockExplodeEvent) {
         e.blockList().removeIf { block ->
-            PasswordManager.exists(block.location.toLockLocation())
+            LockBlockManager.getLockLocation(block)?.let { PasswordManager.exists(it) } == true
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun onInventoryMoveItem(e: InventoryMoveItemEvent) {
-        val source = e.source.holder as? BlockInventoryHolder?
-        val sourceLockLocation = source?.block?.location?.toLockLocation()
-        val destination = e.destination.holder as? BlockInventoryHolder?
-        val destinationLockLocation = destination?.block?.location?.toLockLocation()
+        val source = e.source.holder
+        val destination = e.destination.holder
 
-        if (sourceLockLocation != null && PasswordManager.exists(sourceLockLocation)) {
+        val sourceLockLocation = getLockLocation(source)
+        val destinationLockLocation = getLockLocation(destination)
+
+        if (sourceLockLocation?.let { PasswordManager.exists(it) } == true) {
             e.isCancelled = true
-        } else if (destinationLockLocation != null && PasswordManager.exists(destinationLockLocation)) {
+            return
+        }
+
+        if (destinationLockLocation?.let { PasswordManager.exists(it) } == true) {
             e.isCancelled = true
+        }
+    }
+
+    private fun getLockLocation(holder: InventoryHolder?): LockLocation? {
+        return when (holder) {
+            is DoubleChest -> LockBlockManager.getLockLocation(holder.location.block)
+            is BlockInventoryHolder -> LockBlockManager.getLockLocation(holder.block)
+            else -> null
         }
     }
 
