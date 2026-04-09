@@ -11,7 +11,6 @@ import com.github.ringoame196_s_mcPlugin.PasswordManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Sound
-import org.bukkit.block.DoubleChest
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -25,7 +24,6 @@ import org.bukkit.event.inventory.InventoryMoveItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.inventory.BlockInventoryHolder
 import org.bukkit.inventory.Inventory
-import org.bukkit.inventory.InventoryHolder
 import org.bukkit.plugin.Plugin
 
 class Events(private val plugin: Plugin) : Listener {
@@ -166,11 +164,11 @@ class Events(private val plugin: Plugin) : Listener {
 
     @EventHandler(ignoreCancelled = true)
     fun onInventoryMoveItem(e: InventoryMoveItemEvent) {
-        val source = e.source.holder
+        val source = e.source.holder as? BlockInventoryHolder?
         val destination = e.destination.holder
 
-        val sourceLockLocation = getLockLocation(source)
-        val destinationLockLocation = getLockLocation(destination)
+        val sourceLockLocation = LockBlockManager.getLockLocation(source)
+        val destinationLockLocation = LockBlockManager.getLockLocation(destination)
 
         if (sourceLockLocation?.let { PasswordManager.exists(it) } == true) {
             e.isCancelled = true
@@ -179,14 +177,6 @@ class Events(private val plugin: Plugin) : Listener {
 
         if (destinationLockLocation?.let { PasswordManager.exists(it) } == true) {
             e.isCancelled = true
-        }
-    }
-
-    private fun getLockLocation(holder: InventoryHolder?): LockLocation? {
-        return when (holder) {
-            is DoubleChest -> LockBlockManager.getLockLocation(holder.location.block)
-            is BlockInventoryHolder -> LockBlockManager.getLockLocation(holder.block)
-            else -> null
         }
     }
 

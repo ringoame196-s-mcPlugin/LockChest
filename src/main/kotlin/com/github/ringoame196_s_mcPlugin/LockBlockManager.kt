@@ -5,6 +5,7 @@ import org.bukkit.block.Block
 import org.bukkit.block.Chest
 import org.bukkit.block.DoubleChest
 import org.bukkit.entity.Player
+import org.bukkit.inventory.BlockInventoryHolder
 import org.bukkit.inventory.InventoryHolder
 
 object LockBlockManager {
@@ -32,5 +33,13 @@ object LockBlockManager {
         }
 
         return block.location.toLockLocation()
+    }
+
+    fun getLockLocation(holder: InventoryHolder?): LockLocation? {
+        return when (holder) {
+            is DoubleChest -> getLockLocation(holder.location.block)
+            is BlockInventoryHolder -> getLockLocation(holder.block)
+            else -> null
+        }
     }
 }
