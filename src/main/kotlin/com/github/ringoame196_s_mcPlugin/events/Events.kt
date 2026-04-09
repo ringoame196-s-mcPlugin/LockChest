@@ -15,7 +15,10 @@ import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
+import org.bukkit.event.block.Action
 import org.bukkit.event.block.BlockBreakEvent
+import org.bukkit.event.block.BlockExplodeEvent
+import org.bukkit.event.entity.EntityExplodeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
 import org.bukkit.event.player.PlayerInteractEvent
@@ -106,10 +109,14 @@ class Events(private val plugin: Plugin) : Listener {
         player.sendMessage(message)
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     fun onPlayerInteract(e: PlayerInteractEvent) {
         val player = e.player
         val block = e.clickedBlock ?: return
+        val action = e.action
+
+        if (action != Action.RIGHT_CLICK_BLOCK) return
+
         if (!PasswordManager.exists(block.location.toLockLocation())) {
             return
         }
@@ -135,6 +142,20 @@ class Events(private val plugin: Plugin) : Listener {
         if (PasswordManager.exists(block.location.toLockLocation())) {
             e.isCancelled = true
             player.sendMessage(message)
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun onExplode(e: EntityExplodeEvent) {
+        e.blockList().removeIf { block ->
+            PasswordManager.exists(block.location.toLockLocation())
+        }
+    }
+
+    @EventHandler(ignoreCancelled = true)
+    fun onBlockExplode(e: BlockExplodeEvent) {
+        e.blockList().removeIf { block ->
+            PasswordManager.exists(block.location.toLockLocation())
         }
     }
 
