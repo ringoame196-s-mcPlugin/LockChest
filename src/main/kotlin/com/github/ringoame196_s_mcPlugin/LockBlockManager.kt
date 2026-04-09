@@ -2,6 +2,8 @@ package com.github.ringoame196_s_mcPlugin
 
 import org.bukkit.ChatColor
 import org.bukkit.block.Block
+import org.bukkit.block.Chest
+import org.bukkit.block.DoubleChest
 import org.bukkit.entity.Player
 import org.bukkit.inventory.InventoryHolder
 
@@ -15,5 +17,20 @@ object LockBlockManager {
         } else {
             player.openInventory(inv)
         }
+    }
+
+    fun getLockLocation(block: Block?): LockLocation? {
+        block ?: return null
+        val state = block.state
+
+        if (state is Chest) {
+            val invHolder = state.inventory.holder
+            if (invHolder is DoubleChest) {
+                val left = invHolder.leftSide as Chest
+                return left.block.location.toLockLocation()
+            }
+        }
+
+        return block.location.toLockLocation()
     }
 }
