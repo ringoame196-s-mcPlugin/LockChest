@@ -21,7 +21,9 @@ import org.bukkit.event.block.BlockExplodeEvent
 import org.bukkit.event.entity.EntityExplodeEvent
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.event.inventory.InventoryCloseEvent
+import org.bukkit.event.inventory.InventoryMoveItemEvent
 import org.bukkit.event.player.PlayerInteractEvent
+import org.bukkit.inventory.BlockInventoryHolder
 import org.bukkit.inventory.Inventory
 import org.bukkit.plugin.Plugin
 
@@ -156,6 +158,20 @@ class Events(private val plugin: Plugin) : Listener {
     fun onBlockExplode(e: BlockExplodeEvent) {
         e.blockList().removeIf { block ->
             PasswordManager.exists(block.location.toLockLocation())
+        }
+    }
+
+    @EventHandler
+    fun onInventoryMoveItem(e: InventoryMoveItemEvent) {
+        val source = e.source.holder as? BlockInventoryHolder?
+        val sourceLockLocation = source?.block?.location?.toLockLocation()
+        val destination = e.destination.holder as? BlockInventoryHolder?
+        val destinationLockLocation = destination?.block?.location?.toLockLocation()
+
+        if (sourceLockLocation != null && PasswordManager.exists(sourceLockLocation)) {
+            e.isCancelled = true
+        } else if (destinationLockLocation != null && PasswordManager.exists(destinationLockLocation)) {
+            e.isCancelled = true
         }
     }
 
