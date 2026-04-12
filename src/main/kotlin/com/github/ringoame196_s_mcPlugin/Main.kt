@@ -17,6 +17,7 @@ class Main : JavaPlugin() {
         db = DataBaseManager(this, "data.db")
         db.init()
         PasswordManager.init(db)
+        PasswordManager.loadDB()
 
         // Events
         server.pluginManager.registerEvents(Events(plugin), plugin)

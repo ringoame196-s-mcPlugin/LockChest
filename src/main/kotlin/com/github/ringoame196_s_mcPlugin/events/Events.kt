@@ -71,6 +71,7 @@ class Events(private val plugin: Plugin) : Listener {
                     Runnable {
                         val lockData = LockData(hashPassWord, player.uniqueId)
                         PasswordManager.addLockData(lockLocation, lockData)
+                        PasswordManager.saveDB(lockLocation, lockData)
 
                         val message = "${ChatColor.YELLOW}ロックをかけました"
                         val sound = Sound.BLOCK_CHEST_LOCKED

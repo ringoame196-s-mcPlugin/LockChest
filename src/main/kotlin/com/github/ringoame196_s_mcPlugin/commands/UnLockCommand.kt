@@ -23,6 +23,7 @@ class UnLockCommand : CommandExecutor, TabCompleter {
 
         if (PasswordManager.authenticateOwner(lockLocation, player.uniqueId) || PermissionManager.isAdmin(player)) {
             PasswordManager.removeLockData(lockLocation)
+            PasswordManager.removeDB(lockLocation)
             val message = "${ChatColor.YELLOW}ロックを解除しました"
             player.sendMessage(message)
         } else {
