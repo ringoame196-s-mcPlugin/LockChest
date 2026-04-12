@@ -61,6 +61,9 @@ class Events(private val plugin: Plugin) : Listener {
             return
         }
 
+        // 仮登録
+        PasswordManager.addLockData(lockLocation, LockData("LOCKING", player.uniqueId))
+
         Bukkit.getScheduler().runTaskAsynchronously(
             plugin,
             Runnable {

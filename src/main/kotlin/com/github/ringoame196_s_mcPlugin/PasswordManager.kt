@@ -78,6 +78,10 @@ object PasswordManager {
 
     fun authenticatePassWord(lockLocation: LockLocation, inputPassword: String): Boolean {
         val data = lockData[lockLocation] ?: return false
+        if (data.passWord == "LOCKING") {
+            return false
+        }
+
         val savedHash = data.passWord
         return HashManager.verify(inputPassword, savedHash)
     }
