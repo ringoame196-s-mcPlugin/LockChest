@@ -1,9 +1,9 @@
 package com.github.ringoame196_s_mcPlugin.service
 
-import com.github.ringoame196_s_mcPlugin.util.HashManager
-import com.github.ringoame196_s_mcPlugin.data.LockLocation
 import com.github.ringoame196_s_mcPlugin.data.DataBaseManager
 import com.github.ringoame196_s_mcPlugin.data.LockData
+import com.github.ringoame196_s_mcPlugin.data.LockLocation
+import com.github.ringoame196_s_mcPlugin.util.HashManager
 import java.util.UUID
 
 object PasswordManager {

@@ -1,13 +1,13 @@
 package com.github.ringoame196_s_mcPlugin.events
 
-import com.github.ringoame196_s_mcPlugin.util.HashManager
+import com.github.ringoame196_s_mcPlugin.data.LockData
+import com.github.ringoame196_s_mcPlugin.data.LockLocation
 import com.github.ringoame196_s_mcPlugin.input.InputAnvilInvManager
 import com.github.ringoame196_s_mcPlugin.input.InputData
 import com.github.ringoame196_s_mcPlugin.input.InputType
 import com.github.ringoame196_s_mcPlugin.service.LockBlockManager
-import com.github.ringoame196_s_mcPlugin.data.LockData
-import com.github.ringoame196_s_mcPlugin.data.LockLocation
 import com.github.ringoame196_s_mcPlugin.service.PasswordManager
+import com.github.ringoame196_s_mcPlugin.util.HashManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Sound
