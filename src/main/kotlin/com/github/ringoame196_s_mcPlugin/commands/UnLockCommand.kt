@@ -1,8 +1,8 @@
 package com.github.ringoame196_s_mcPlugin.commands
 
-import com.github.ringoame196_s_mcPlugin.LockBlockManager
-import com.github.ringoame196_s_mcPlugin.PasswordManager
-import com.github.ringoame196_s_mcPlugin.PermissionManager
+import com.github.ringoame196_s_mcPlugin.service.LockBlockManager
+import com.github.ringoame196_s_mcPlugin.service.PasswordManager
+import com.github.ringoame196_s_mcPlugin.permission.PermissionManager
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
