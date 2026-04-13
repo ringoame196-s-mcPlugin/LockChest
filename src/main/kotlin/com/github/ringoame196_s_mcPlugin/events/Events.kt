@@ -1,13 +1,13 @@
 package com.github.ringoame196_s_mcPlugin.events
 
-import com.github.ringoame196_s_mcPlugin.HashManager
-import com.github.ringoame196_s_mcPlugin.InputAnvilInvManager
-import com.github.ringoame196_s_mcPlugin.InputData
-import com.github.ringoame196_s_mcPlugin.InputType
-import com.github.ringoame196_s_mcPlugin.LockBlockManager
-import com.github.ringoame196_s_mcPlugin.LockData
-import com.github.ringoame196_s_mcPlugin.LockLocation
-import com.github.ringoame196_s_mcPlugin.PasswordManager
+import com.github.ringoame196_s_mcPlugin.data.LockData
+import com.github.ringoame196_s_mcPlugin.data.LockLocation
+import com.github.ringoame196_s_mcPlugin.input.InputAnvilInvManager
+import com.github.ringoame196_s_mcPlugin.input.InputData
+import com.github.ringoame196_s_mcPlugin.input.InputType
+import com.github.ringoame196_s_mcPlugin.service.LockBlockManager
+import com.github.ringoame196_s_mcPlugin.service.PasswordManager
+import com.github.ringoame196_s_mcPlugin.util.HashManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Sound
@@ -61,6 +61,9 @@ class Events(private val plugin: Plugin) : Listener {
             return
         }
 
+        // 仮登録
+        PasswordManager.addLockData(lockLocation, LockData("LOCKING", player.uniqueId))
+
         Bukkit.getScheduler().runTaskAsynchronously(
             plugin,
             Runnable {
@@ -71,6 +74,7 @@ class Events(private val plugin: Plugin) : Listener {
                     Runnable {
                         val lockData = LockData(hashPassWord, player.uniqueId)
                         PasswordManager.addLockData(lockLocation, lockData)
+                        PasswordManager.saveDB(lockLocation, lockData)
 
                         val message = "${ChatColor.YELLOW}ロックをかけました"
                         val sound = Sound.BLOCK_CHEST_LOCKED

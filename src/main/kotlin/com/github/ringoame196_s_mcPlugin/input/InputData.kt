@@ -1,4 +1,4 @@
-package com.github.ringoame196_s_mcPlugin
+package com.github.ringoame196_s_mcPlugin.input
 
 import org.bukkit.block.Block
 import java.util.UUID

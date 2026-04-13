@@ -1,7 +1,7 @@
 package com.github.ringoame196_s_mcPlugin.commands
 
-import com.github.ringoame196_s_mcPlugin.InputAnvilInvManager
-import com.github.ringoame196_s_mcPlugin.InputType
+import com.github.ringoame196_s_mcPlugin.input.InputAnvilInvManager
+import com.github.ringoame196_s_mcPlugin.input.InputType
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.block.Block

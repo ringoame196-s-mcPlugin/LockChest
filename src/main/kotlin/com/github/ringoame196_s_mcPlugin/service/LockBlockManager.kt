@@ -1,5 +1,7 @@
-package com.github.ringoame196_s_mcPlugin
+package com.github.ringoame196_s_mcPlugin.service
 
+import com.github.ringoame196_s_mcPlugin.data.LockLocation
+import com.github.ringoame196_s_mcPlugin.util.toLockLocation
 import org.bukkit.ChatColor
 import org.bukkit.block.Block
 import org.bukkit.block.Chest

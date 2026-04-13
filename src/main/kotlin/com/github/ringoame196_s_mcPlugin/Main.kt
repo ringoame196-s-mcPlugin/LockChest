@@ -3,7 +3,9 @@ package com.github.ringoame196_s_mcPlugin
 import com.github.ringoame196_s_mcPlugin.commands.LockCommand
 import com.github.ringoame196_s_mcPlugin.commands.OpenCommand
 import com.github.ringoame196_s_mcPlugin.commands.UnLockCommand
+import com.github.ringoame196_s_mcPlugin.data.DataBaseManager
 import com.github.ringoame196_s_mcPlugin.events.Events
+import com.github.ringoame196_s_mcPlugin.service.PasswordManager
 import org.bukkit.plugin.java.JavaPlugin
 
 class Main : JavaPlugin() {
@@ -17,6 +19,7 @@ class Main : JavaPlugin() {
         db = DataBaseManager(this, "data.db")
         db.init()
         PasswordManager.init(db)
+        PasswordManager.loadDB()
 
         // Events
         server.pluginManager.registerEvents(Events(plugin), plugin)
