@@ -1,8 +1,8 @@
-package com.github.ringoame196_s_mcPlugin.commands
+package com.github.ringoame196_s_mcPlugin.command
 
-import com.github.ringoame196_s_mcPlugin.permission.PermissionManager
-import com.github.ringoame196_s_mcPlugin.service.LockBlockManager
-import com.github.ringoame196_s_mcPlugin.service.PasswordManager
+import com.github.ringoame196_s_mcPlugin.service.LockBlockService
+import com.github.ringoame196_s_mcPlugin.service.PasswordService
+import com.github.ringoame196_s_mcPlugin.service.PermissionService
 import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
@@ -13,17 +13,17 @@ class UnLockCommand : CommandExecutor, TabCompleter {
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         val player = CommonCommand.getPlayer(sender) ?: return true
         val block = CommonCommand.getTargetLockBlock(player) ?: return true
-        val lockLocation = LockBlockManager.getLockLocation(block) ?: return true
+        val lockLocation = LockBlockService.getLockLocation(block) ?: return true
 
-        if (!PasswordManager.exists(lockLocation)) {
+        if (!PasswordService.exists(lockLocation)) {
             val message = "${ChatColor.RED}ロックがかかっていません"
             player.sendMessage(message)
             return true
         }
 
-        if (PasswordManager.authenticateOwner(lockLocation, player.uniqueId) || PermissionManager.isAdmin(player)) {
-            PasswordManager.removeLockData(lockLocation)
-            PasswordManager.removeDB(lockLocation)
+        if (PasswordService.authenticateOwner(lockLocation, player.uniqueId) || PermissionService.isAdmin(player)) {
+            PasswordService.removeLockData(lockLocation)
+            PasswordService.removeDB(lockLocation)
             val message = "${ChatColor.YELLOW}ロックを解除しました"
             player.sendMessage(message)
         } else {

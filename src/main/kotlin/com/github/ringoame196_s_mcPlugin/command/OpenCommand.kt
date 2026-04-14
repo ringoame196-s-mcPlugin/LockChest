@@ -1,6 +1,6 @@
-package com.github.ringoame196_s_mcPlugin.commands
+package com.github.ringoame196_s_mcPlugin.command
 
-import com.github.ringoame196_s_mcPlugin.service.LockBlockManager
+import com.github.ringoame196_s_mcPlugin.service.LockBlockService
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -11,7 +11,7 @@ class OpenCommand : CommandExecutor, TabCompleter {
         val player = CommonCommand.getPlayer(sender) ?: return true
         val block = CommonCommand.getTargetLockBlock(player) ?: return true
 
-        LockBlockManager.openInventory(player, block)
+        LockBlockService.openInventory(player, block)
         return true
     }
 

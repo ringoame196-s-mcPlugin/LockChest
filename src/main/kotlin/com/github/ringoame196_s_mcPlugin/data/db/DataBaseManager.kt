@@ -1,4 +1,4 @@
-package com.github.ringoame196_s_mcPlugin.data
+package com.github.ringoame196_s_mcPlugin.data.db
 
 import org.bukkit.plugin.Plugin
 import java.io.File
@@ -7,7 +7,6 @@ import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.SQLException
 import java.util.concurrent.Executors
-import kotlin.io.use
 
 class DataBaseManager(private val plugin: Plugin, dbName: String) {
     private val dbFile: File = File(plugin.dataFolder, dbName)

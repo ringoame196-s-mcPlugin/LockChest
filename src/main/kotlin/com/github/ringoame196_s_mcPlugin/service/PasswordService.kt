@@ -1,12 +1,12 @@
 package com.github.ringoame196_s_mcPlugin.service
 
-import com.github.ringoame196_s_mcPlugin.data.DataBaseManager
-import com.github.ringoame196_s_mcPlugin.data.LockData
-import com.github.ringoame196_s_mcPlugin.data.LockLocation
+import com.github.ringoame196_s_mcPlugin.data.db.DataBaseManager
+import com.github.ringoame196_s_mcPlugin.data.model.LockData
+import com.github.ringoame196_s_mcPlugin.data.model.LockLocation
 import com.github.ringoame196_s_mcPlugin.util.HashManager
 import java.util.UUID
 
-object PasswordManager {
+object PasswordService {
     private lateinit var db: DataBaseManager
     private val lockData = mutableMapOf<LockLocation, LockData>()
 

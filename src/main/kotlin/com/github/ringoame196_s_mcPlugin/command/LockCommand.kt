@@ -1,4 +1,4 @@
-package com.github.ringoame196_s_mcPlugin.commands
+package com.github.ringoame196_s_mcPlugin.command
 
 import com.github.ringoame196_s_mcPlugin.input.InputType
 import org.bukkit.command.Command
