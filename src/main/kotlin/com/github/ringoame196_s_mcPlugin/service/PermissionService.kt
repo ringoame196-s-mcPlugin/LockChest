@@ -1,8 +1,8 @@
-package com.github.ringoame196_s_mcPlugin.permission
+package com.github.ringoame196_s_mcPlugin.service
 
 import org.bukkit.entity.Player
 
-object PermissionManager {
+object PermissionService {
     private const val ADMIN_PERMISSION_NAME = "lockchest.admin"
 
     fun isAdmin(player: Player): Boolean {

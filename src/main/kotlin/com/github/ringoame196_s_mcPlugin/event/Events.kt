@@ -1,12 +1,12 @@
-package com.github.ringoame196_s_mcPlugin.events
+package com.github.ringoame196_s_mcPlugin.event
 
-import com.github.ringoame196_s_mcPlugin.data.LockData
-import com.github.ringoame196_s_mcPlugin.data.LockLocation
+import com.github.ringoame196_s_mcPlugin.data.model.LockData
+import com.github.ringoame196_s_mcPlugin.data.model.LockLocation
 import com.github.ringoame196_s_mcPlugin.input.InputAnvilInvManager
 import com.github.ringoame196_s_mcPlugin.input.InputData
 import com.github.ringoame196_s_mcPlugin.input.InputType
-import com.github.ringoame196_s_mcPlugin.service.LockBlockManager
-import com.github.ringoame196_s_mcPlugin.service.PasswordManager
+import com.github.ringoame196_s_mcPlugin.service.LockBlockService
+import com.github.ringoame196_s_mcPlugin.service.PasswordService
 import com.github.ringoame196_s_mcPlugin.util.HashManager
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -44,7 +44,7 @@ class Events(private val plugin: Plugin) : Listener {
 
         player.closeInventory()
         InputAnvilInvManager.deleteList(inv)
-        val lockLocation = LockBlockManager.getLockLocation(inputData.lockBlock) ?: return
+        val lockLocation = LockBlockService.getLockLocation(inputData.lockBlock) ?: return
 
         val inputPassWord = InputAnvilInvManager.getText(inv) ?: return
 
@@ -55,14 +55,14 @@ class Events(private val plugin: Plugin) : Listener {
     }
 
     private fun lock(lockLocation: LockLocation, inputPassWord: String, player: Player) {
-        if (PasswordManager.exists(lockLocation)) {
+        if (PasswordService.exists(lockLocation)) {
             val message = "${ChatColor.RED}既にロックがかかっています"
             player.sendMessage(message)
             return
         }
 
         // 仮登録
-        PasswordManager.addLockData(lockLocation, LockData("LOCKING", player.uniqueId))
+        PasswordService.addLockData(lockLocation, LockData("LOCKING", player.uniqueId))
 
         Bukkit.getScheduler().runTaskAsynchronously(
             plugin,
@@ -73,8 +73,8 @@ class Events(private val plugin: Plugin) : Listener {
                     plugin,
                     Runnable {
                         val lockData = LockData(hashPassWord, player.uniqueId)
-                        PasswordManager.addLockData(lockLocation, lockData)
-                        PasswordManager.saveDB(lockLocation, lockData)
+                        PasswordService.addLockData(lockLocation, lockData)
+                        PasswordService.saveDB(lockLocation, lockData)
 
                         val message = "${ChatColor.YELLOW}ロックをかけました"
                         val sound = Sound.BLOCK_CHEST_LOCKED
@@ -88,18 +88,18 @@ class Events(private val plugin: Plugin) : Listener {
 
     private fun open(player: Player, inputData: InputData, inputPassword: String) {
         val lockBlock = inputData.lockBlock
-        val lockLocation = LockBlockManager.getLockLocation(lockBlock) ?: return
+        val lockLocation = LockBlockService.getLockLocation(lockBlock) ?: return
 
         Bukkit.getScheduler().runTaskAsynchronously(
             plugin,
             Runnable {
-                val ok = PasswordManager.authenticatePassWord(lockLocation, inputPassword)
+                val ok = PasswordService.authenticatePassWord(lockLocation, inputPassword)
 
                 Bukkit.getScheduler().runTask(
                     plugin,
                     Runnable {
                         if (ok) {
-                            LockBlockManager.openInventory(player, lockBlock)
+                            LockBlockService.openInventory(player, lockBlock)
                         } else {
                             sendFailure(player)
                         }
@@ -122,8 +122,8 @@ class Events(private val plugin: Plugin) : Listener {
 
         if (action != Action.RIGHT_CLICK_BLOCK) return
 
-        val lockLocation = LockBlockManager.getLockLocation(block) ?: return
-        if (!PasswordManager.exists(lockLocation)) {
+        val lockLocation = LockBlockService.getLockLocation(block) ?: return
+        if (!PasswordService.exists(lockLocation)) {
             return
         }
         e.isCancelled = true
@@ -145,8 +145,8 @@ class Events(private val plugin: Plugin) : Listener {
         val player = e.player
         val message = "${ChatColor.RED}This block is locked"
 
-        val lockLocation = LockBlockManager.getLockLocation(block) ?: return
-        if (PasswordManager.exists(lockLocation)) {
+        val lockLocation = LockBlockService.getLockLocation(block) ?: return
+        if (PasswordService.exists(lockLocation)) {
             e.isCancelled = true
             player.sendMessage(message)
         }
@@ -155,14 +155,14 @@ class Events(private val plugin: Plugin) : Listener {
     @EventHandler(ignoreCancelled = true)
     fun onExplode(e: EntityExplodeEvent) {
         e.blockList().removeIf { block ->
-            LockBlockManager.getLockLocation(block)?.let { PasswordManager.exists(it) } == true
+            LockBlockService.getLockLocation(block)?.let { PasswordService.exists(it) } == true
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     fun onBlockExplode(e: BlockExplodeEvent) {
         e.blockList().removeIf { block ->
-            LockBlockManager.getLockLocation(block)?.let { PasswordManager.exists(it) } == true
+            LockBlockService.getLockLocation(block)?.let { PasswordService.exists(it) } == true
         }
     }
 
@@ -171,15 +171,15 @@ class Events(private val plugin: Plugin) : Listener {
         val source = e.source.holder as? BlockInventoryHolder?
         val destination = e.destination.holder
 
-        val sourceLockLocation = LockBlockManager.getLockLocation(source)
-        val destinationLockLocation = LockBlockManager.getLockLocation(destination)
+        val sourceLockLocation = LockBlockService.getLockLocation(source)
+        val destinationLockLocation = LockBlockService.getLockLocation(destination)
 
-        if (sourceLockLocation?.let { PasswordManager.exists(it) } == true) {
+        if (sourceLockLocation?.let { PasswordService.exists(it) } == true) {
             e.isCancelled = true
             return
         }
 
-        if (destinationLockLocation?.let { PasswordManager.exists(it) } == true) {
+        if (destinationLockLocation?.let { PasswordService.exists(it) } == true) {
             e.isCancelled = true
         }
     }

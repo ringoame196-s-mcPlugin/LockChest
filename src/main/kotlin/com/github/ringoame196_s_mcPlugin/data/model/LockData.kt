@@ -1,4 +1,4 @@
-package com.github.ringoame196_s_mcPlugin.data
+package com.github.ringoame196_s_mcPlugin.data.model
 
 import java.util.UUID
 

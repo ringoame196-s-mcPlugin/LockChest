@@ -1,6 +1,6 @@
 package com.github.ringoame196_s_mcPlugin.service
 
-import com.github.ringoame196_s_mcPlugin.data.LockLocation
+import com.github.ringoame196_s_mcPlugin.data.model.LockLocation
 import com.github.ringoame196_s_mcPlugin.util.toLockLocation
 import org.bukkit.ChatColor
 import org.bukkit.block.Block
@@ -10,9 +10,9 @@ import org.bukkit.entity.Player
 import org.bukkit.inventory.BlockInventoryHolder
 import org.bukkit.inventory.InventoryHolder
 
-object LockBlockManager {
+object LockBlockService {
     fun openInventory(player: Player, block: Block) {
-        val state = block.state as? InventoryHolder?
+        val state = block.state as? InventoryHolder
         val inv = state?.inventory
         if (inv == null) {
             val message = "${ChatColor.RED}This block does not have an inventory"
