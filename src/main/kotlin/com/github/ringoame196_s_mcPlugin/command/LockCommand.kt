@@ -16,9 +16,6 @@ class LockCommand : CommandExecutor, TabCompleter {
     }
 
     override fun onTabComplete(commandSender: CommandSender, command: Command, label: String, args: Array<out String>): MutableList<String>? {
-        return when (args.size) {
-            1 -> mutableListOf("list")
-            else -> null
-        }
+        return null
     }
 }
