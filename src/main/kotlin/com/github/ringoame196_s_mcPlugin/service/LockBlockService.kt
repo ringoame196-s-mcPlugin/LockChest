@@ -1,8 +1,8 @@
 package com.github.ringoame196_s_mcPlugin.service
 
+import com.github.ringoame196_s_mcPlugin.const.MessageConst
 import com.github.ringoame196_s_mcPlugin.data.model.LockLocation
 import com.github.ringoame196_s_mcPlugin.util.toLockLocation
-import org.bukkit.ChatColor
 import org.bukkit.block.Block
 import org.bukkit.block.Chest
 import org.bukkit.block.DoubleChest
@@ -15,8 +15,7 @@ object LockBlockService {
         val state = block.state as? InventoryHolder
         val inv = state?.inventory
         if (inv == null) {
-            val message = "${ChatColor.RED}This block does not have an inventory"
-            player.sendMessage(message)
+            player.sendMessage(MessageConst.NO_OPEN_MESSAGE)
         } else {
             player.openInventory(inv)
         }

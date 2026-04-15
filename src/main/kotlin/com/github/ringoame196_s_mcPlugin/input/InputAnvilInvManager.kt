@@ -9,6 +9,8 @@ import org.bukkit.inventory.ItemStack
 
 object InputAnvilInvManager {
     private val inputAnvilInventorys = mutableMapOf<Inventory, InputData>()
+    private const val DISPLAY_NAME = "パスワード:"
+    private val LORE = listOf("パスワードを入力してください")
 
     fun openInv(player: Player, type: InputType, lockBlock: Block) {
         player.openAnvil(null, true)
@@ -22,8 +24,8 @@ object InputAnvilInvManager {
     private fun makeInputPaper(): ItemStack {
         val item = ItemStack(Material.PAPER)
         val meta = item.itemMeta
-        meta.setDisplayName("パスワード:")
-        meta.lore = listOf("パスワードを入力してください")
+        meta.setDisplayName(DISPLAY_NAME)
+        meta.lore = LORE
         item.setItemMeta(meta)
         return item
     }

@@ -1,5 +1,6 @@
 package com.github.ringoame196_s_mcPlugin.event
 
+import com.github.ringoame196_s_mcPlugin.const.MessageConst
 import com.github.ringoame196_s_mcPlugin.data.model.LockData
 import com.github.ringoame196_s_mcPlugin.data.model.LockLocation
 import com.github.ringoame196_s_mcPlugin.input.InputAnvilInvManager
@@ -9,7 +10,6 @@ import com.github.ringoame196_s_mcPlugin.service.LockBlockService
 import com.github.ringoame196_s_mcPlugin.service.PasswordService
 import com.github.ringoame196_s_mcPlugin.util.HashManager
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.Sound
 import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
@@ -56,8 +56,7 @@ class Events(private val plugin: Plugin) : Listener {
 
     private fun lock(lockLocation: LockLocation, inputPassWord: String, player: Player) {
         if (PasswordService.exists(lockLocation)) {
-            val message = "${ChatColor.RED}既にロックがかかっています"
-            player.sendMessage(message)
+            player.sendMessage(MessageConst.ALREADY_LOCK_MESSAGE)
             return
         }
 
@@ -76,9 +75,8 @@ class Events(private val plugin: Plugin) : Listener {
                         PasswordService.addLockData(lockLocation, lockData)
                         PasswordService.saveDB(lockLocation, lockData)
 
-                        val message = "${ChatColor.YELLOW}ロックをかけました"
                         val sound = Sound.BLOCK_CHEST_LOCKED
-                        player.sendMessage(message)
+                        player.sendMessage(MessageConst.LOCK_MESSAGE)
                         player.playSound(player, sound, 1f, 1f)
                     }
                 )
@@ -101,17 +99,12 @@ class Events(private val plugin: Plugin) : Listener {
                         if (ok) {
                             LockBlockService.openInventory(player, lockBlock)
                         } else {
-                            sendFailure(player)
+                            player.sendMessage(MessageConst.WRONG_PASSWORD_MESSAGE)
                         }
                     }
                 )
             }
         )
-    }
-
-    private fun sendFailure(player: Player) {
-        val message = "${ChatColor.RED}パスワードが間違っています"
-        player.sendMessage(message)
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -143,12 +136,11 @@ class Events(private val plugin: Plugin) : Listener {
     fun onBlockBreakBlock(e: BlockBreakEvent) {
         val block = e.block
         val player = e.player
-        val message = "${ChatColor.RED}This block is locked"
 
         val lockLocation = LockBlockService.getLockLocation(block) ?: return
         if (PasswordService.exists(lockLocation)) {
             e.isCancelled = true
-            player.sendMessage(message)
+            player.sendMessage(MessageConst.NO_BREAK_MESSAGE)
         }
     }
 

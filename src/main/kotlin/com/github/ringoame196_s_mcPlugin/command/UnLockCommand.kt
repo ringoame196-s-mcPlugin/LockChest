@@ -1,9 +1,9 @@
 package com.github.ringoame196_s_mcPlugin.command
 
+import com.github.ringoame196_s_mcPlugin.const.MessageConst
 import com.github.ringoame196_s_mcPlugin.service.LockBlockService
 import com.github.ringoame196_s_mcPlugin.service.PasswordService
 import com.github.ringoame196_s_mcPlugin.service.PermissionService
-import org.bukkit.ChatColor
 import org.bukkit.command.Command
 import org.bukkit.command.CommandExecutor
 import org.bukkit.command.CommandSender
@@ -16,19 +16,16 @@ class UnLockCommand : CommandExecutor, TabCompleter {
         val lockLocation = LockBlockService.getLockLocation(block) ?: return true
 
         if (!PasswordService.exists(lockLocation)) {
-            val message = "${ChatColor.RED}ロックがかかっていません"
-            player.sendMessage(message)
+            player.sendMessage(MessageConst.NO_LOCK_MESSAGE)
             return true
         }
 
         if (PasswordService.authenticateOwner(lockLocation, player.uniqueId) || PermissionService.isAdmin(player)) {
             PasswordService.removeLockData(lockLocation)
             PasswordService.removeDB(lockLocation)
-            val message = "${ChatColor.YELLOW}ロックを解除しました"
-            player.sendMessage(message)
+            player.sendMessage(MessageConst.UNLOCK_MESSAGE)
         } else {
-            val message = "${ChatColor.RED}あなたはロックを解除することはできません"
-            player.sendMessage(message)
+            player.sendMessage(MessageConst.NO_PERMISSION_MESSAGE)
         }
 
         return true
