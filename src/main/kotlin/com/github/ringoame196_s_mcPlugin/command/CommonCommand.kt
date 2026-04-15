@@ -1,8 +1,8 @@
 package com.github.ringoame196_s_mcPlugin.command
 
+import com.github.ringoame196_s_mcPlugin.const.MessageConst
 import com.github.ringoame196_s_mcPlugin.input.InputAnvilInvManager
 import com.github.ringoame196_s_mcPlugin.input.InputType
-import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.command.CommandSender
@@ -20,7 +20,7 @@ object CommonCommand {
 
     fun getPlayer(sender: CommandSender): Player? {
         if (sender !is Player) {
-            sender.sendMessage("Only players can execute this command")
+            sender.sendMessage(MessageConst.PLAYER_ONLY_MESSAGE)
             return null
         }
         return sender
@@ -29,10 +29,9 @@ object CommonCommand {
     fun getTargetLockBlock(player: Player): Block? {
         val block = player.getTargetBlockExact(5)
         if (block == null) {
-            player.sendMessage("${ChatColor.RED}Please select a block")
             return null
         } else if (!permitBlocks.contains(block.type) && !block.type.toString().contains("SHULKER_BOX")) {
-            player.sendMessage("${ChatColor.RED}This block is excluded")
+            player.sendMessage(MessageConst.UNSUPPORTED_BLOCK_MESSAGE)
             return null
         }
         return block
