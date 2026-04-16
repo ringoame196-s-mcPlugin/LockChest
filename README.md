@@ -3,10 +3,17 @@
 ## プラグイン説明
 チェストなどのブロックにロックをかけるプラグイン
 
+https://github.com/user-attachments/assets/081edb68-a05c-46ca-9539-d186da8ae06a
+
+
+
+
+
 ## プラグインダウンロード
 [ダウンロードリンク](https://github.com/ringoame196-s-mcPlugin/LockChest/releases/latest)
 
 ## コマンド
+
 | コマンド名 | 説明           | 権限 |
 |-------|--------------| ------- |
 | /lock | ブロックにロックをかける | --- |
