@@ -1,6 +1,6 @@
 package com.github.ringoame196_s_mcPlugin.event
 
-import com.github.ringoame196_s_mcPlugin.const.MessageConst
+import com.github.ringoame196_s_mcPlugin.const.FeedbackConst
 import com.github.ringoame196_s_mcPlugin.data.model.LockData
 import com.github.ringoame196_s_mcPlugin.data.model.LockLocation
 import com.github.ringoame196_s_mcPlugin.input.InputAnvilInvManager
@@ -56,7 +56,7 @@ class Events(private val plugin: Plugin) : Listener {
 
     private fun lock(lockLocation: LockLocation, inputPassWord: String, player: Player) {
         if (PasswordService.exists(lockLocation)) {
-            player.sendMessage(MessageConst.ALREADY_LOCK_MESSAGE)
+            player.sendMessage(FeedbackConst.ALREADY_LOCK_MESSAGE)
             return
         }
 
@@ -76,8 +76,8 @@ class Events(private val plugin: Plugin) : Listener {
                         PasswordService.saveDB(lockLocation, lockData)
 
                         val sound = Sound.BLOCK_CHEST_LOCKED
-                        player.sendMessage(MessageConst.LOCK_MESSAGE)
-                        player.playSound(player, sound, 1f, 1f)
+                        player.sendMessage(FeedbackConst.LOCK.message)
+                        player.playSound(player, FeedbackConst.LOCK.sound, 1f, 1f)
                     }
                 )
             }
@@ -99,7 +99,8 @@ class Events(private val plugin: Plugin) : Listener {
                         if (ok) {
                             LockBlockService.openInventory(player, lockBlock)
                         } else {
-                            player.sendMessage(MessageConst.WRONG_PASSWORD_MESSAGE)
+                            player.sendMessage(FeedbackConst.WRONG_PASSWORD.message)
+                            player.playSound(player, FeedbackConst.WRONG_PASSWORD.sound, 1f, 1f)
                         }
                     }
                 )
@@ -140,7 +141,8 @@ class Events(private val plugin: Plugin) : Listener {
         val lockLocation = LockBlockService.getLockLocation(block) ?: return
         if (PasswordService.exists(lockLocation)) {
             e.isCancelled = true
-            player.sendMessage(MessageConst.NO_BREAK_MESSAGE)
+            player.sendMessage(FeedbackConst.NO_BREAK.message)
+            player.playSound(player, FeedbackConst.NO_BREAK.sound, 1f, 1f)
         }
     }
 

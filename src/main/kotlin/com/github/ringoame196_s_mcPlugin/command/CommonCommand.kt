@@ -1,6 +1,6 @@
 package com.github.ringoame196_s_mcPlugin.command
 
-import com.github.ringoame196_s_mcPlugin.const.MessageConst
+import com.github.ringoame196_s_mcPlugin.const.FeedbackConst
 import com.github.ringoame196_s_mcPlugin.input.InputAnvilInvManager
 import com.github.ringoame196_s_mcPlugin.input.InputType
 import org.bukkit.Material
@@ -20,7 +20,7 @@ object CommonCommand {
 
     fun getPlayer(sender: CommandSender): Player? {
         if (sender !is Player) {
-            sender.sendMessage(MessageConst.PLAYER_ONLY_MESSAGE)
+            sender.sendMessage(FeedbackConst.PLAYER_ONLY_MESSAGE)
             return null
         }
         return sender
@@ -31,7 +31,7 @@ object CommonCommand {
         if (block == null) {
             return null
         } else if (!permitBlocks.contains(block.type) && !block.type.toString().contains("SHULKER_BOX")) {
-            player.sendMessage(MessageConst.UNSUPPORTED_BLOCK_MESSAGE)
+            player.sendMessage(FeedbackConst.UNSUPPORTED_BLOCK_MESSAGE)
             return null
         }
         return block

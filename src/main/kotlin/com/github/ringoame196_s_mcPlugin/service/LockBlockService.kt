@@ -1,6 +1,6 @@
 package com.github.ringoame196_s_mcPlugin.service
 
-import com.github.ringoame196_s_mcPlugin.const.MessageConst
+import com.github.ringoame196_s_mcPlugin.const.FeedbackConst
 import com.github.ringoame196_s_mcPlugin.data.model.LockLocation
 import com.github.ringoame196_s_mcPlugin.util.toLockLocation
 import org.bukkit.block.Block
@@ -15,7 +15,7 @@ object LockBlockService {
         val state = block.state as? InventoryHolder
         val inv = state?.inventory
         if (inv == null) {
-            player.sendMessage(MessageConst.NO_OPEN_MESSAGE)
+            player.sendMessage(FeedbackConst.NO_OPEN_MESSAGE)
         } else {
             player.openInventory(inv)
         }
