@@ -1,19 +1,26 @@
 # LockChest
 
 ## プラグイン説明
+チェストなどのブロックにロックをかけるプラグイン
 
 ## プラグインダウンロード
 [ダウンロードリンク](https://github.com/ringoame196-s-mcPlugin/LockChest/releases/latest)
 
 ## コマンド
-| コマンド名   |     説明      | 権限 |
-| --- | ----------- | ------- |
+| コマンド名 | 説明           | 権限 |
+|-------|--------------| ------- |
+| /lock | ブロックにロックをかける | --- |
+| /unlock | ブロックのロックを解除する | --- |
+| /open | ロック関係なくインベントリを開く | lockchest.admin |
 
-## 使い方
-
-## configファイル
-| key名   |     説明      | デフォルト値 |
-| --- | ----------- | ------- |
+## 対象ブロック
+- Material.CHEST
+- Material.TRAPPED_CHEST
+- Material.BARREL
+- Material.FURNACE
+- Material.SMOKER
+- Material.BLAST_FURNACE
+- 各色シュルカーボックス
  
 ## 開発環境
 - Minecraft Version : 1.20.1
