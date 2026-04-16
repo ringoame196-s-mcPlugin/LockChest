@@ -1,6 +1,6 @@
 package com.github.ringoame196_s_mcPlugin.command
 
-import com.github.ringoame196_s_mcPlugin.const.MessageConst
+import com.github.ringoame196_s_mcPlugin.const.FeedbackConst
 import com.github.ringoame196_s_mcPlugin.service.LockBlockService
 import com.github.ringoame196_s_mcPlugin.service.PasswordService
 import com.github.ringoame196_s_mcPlugin.service.PermissionService
@@ -16,16 +16,17 @@ class UnLockCommand : CommandExecutor, TabCompleter {
         val lockLocation = LockBlockService.getLockLocation(block) ?: return true
 
         if (!PasswordService.exists(lockLocation)) {
-            player.sendMessage(MessageConst.NO_LOCK_MESSAGE)
+            player.sendMessage(FeedbackConst.NO_LOCK_MESSAGE)
             return true
         }
 
         if (PasswordService.authenticateOwner(lockLocation, player.uniqueId) || PermissionService.isAdmin(player)) {
             PasswordService.removeLockData(lockLocation)
             PasswordService.removeDB(lockLocation)
-            player.sendMessage(MessageConst.UNLOCK_MESSAGE)
+            player.sendMessage(FeedbackConst.UNLOCK.message)
+            player.playSound(player, FeedbackConst.UNLOCK.sound, 1f, 1f)
         } else {
-            player.sendMessage(MessageConst.NO_PERMISSION_MESSAGE)
+            player.sendMessage(FeedbackConst.NO_PERMISSION_MESSAGE)
         }
 
         return true
